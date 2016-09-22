@@ -1,0 +1,53 @@
+.log-option {
+    border-radius: 15px;
+    float: left;
+    font-size: 3em;
+    background-color:#e3e3e3;
+    width: 200px;
+    height: 200px;
+    margin: 15px;
+}
+
+.heading {
+    text-align: center;
+}
+
+
+body { 
+    padding-top: 70px; 
+
+}
+
+.navbar p {
+    font-size: 2em;
+   
+}
+.navbar-custom {
+    background-color: #e3e3e3
+}
+
+.text-small {
+    font-size: .5em;
+}
+
+#createAccountLink {
+    font-size: 1em;
+   
+}
+
+.list-group-item-sub{
+    padding-left: 5px;
+}
+
+li
+{
+    list-style: none;
+}
+
+.clickable {
+    cursor: pointer
+}
+.log-option {
+    padding: 7px;
+
+}

@@ -1,0 +1,169 @@
+<link rel="stylesheet"  href="css/styles.css">
+<link rel="stylesheet"  href="logsubs/calories/css/style.css">
+
+<h1 class="heading">Edit Combination</h1>
+<div id="edit-combo-div" class="jumbotron col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+
+    <div id="combinationDisplayDiv" > 
+
+        <h3 id="titleCombinationName"></h3>
+        <ul id="combinationItemsUl"></ul>
+        <button id="button-save-combo" type="button" class="btn btn-primary form-control hidden">Save this combo combo</button>
+    </div>
+
+    <div id="divSelectCombination" class="form-group">
+        <label for="selectCombination">Select combo to edit:</label>
+        <select class="form-control" id="selectCombination"></select>
+    </div>
+    <div id='items' hidden>
+        <div id="div-combo-display">
+            <h3 id="combo-name"></h3>
+            <ul id='combo-items-list'></ul>
+        </div>
+    </div>
+    <div id="div-addItem" class="hidden">
+         <form>
+        <label for="select-selectItem">Select an Item</label>
+        <select class="form-control" id="select-selectItem"></select>
+        <label for="howMuch">How many grammes</label>
+       
+            <input type="number" class="form-control" id="howMuch">
+            
+        </form>
+        <button id="button-add-to-combo" class="btn btn-primary">Add to Combo</button>
+    </div>
+</div>
+
+
+<script>
+    var comboArray = [];
+    var comboId = "";
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/getCombinationsForSelect.php'
+        })
+                .done(function (response) {
+                    // alert("response=" + response);
+                    console.log("response=" + response);
+                    $("#selectCombination").html(response);
+                });
+
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/getItemsForSelect.php'
+        })
+                .done(function (response) {
+                    console.log("response=" + response);
+                    $("#selectItem").html(response);
+                    //$("#selectItem").append('<a class="add" href="#"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>');
+                });
+    });
+
+
+
+    function addItem() {
+
+        $("#div-addItem").removeClass("hidden");
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/getItemsForSelect.php'
+        })
+                .done(function (response) {
+                    $("#select-selectItem").html(response);
+                });
+    };
+    $("#edit-combo-div").off("click");
+    $("#edit-combo-div").on("click", "#add", addItem);
+    $("#edit-combo-div").on("click", "#button-add-to-combo", function () {
+
+        var itemId = $("#select-selectItem option:selected").val();
+        var itemName = $("#select-selectItem option:selected").text();
+        var itemQuantity = $("#howMuch").val();
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/addToCombo.php',
+            data: {comboId: comboId,
+                itemId: itemId,
+                itemName: itemName,
+                itemQuantity: itemQuantity}
+        })
+                .done(function (result) {
+                    console.log(result);
+                    $("#combo-items-list li:last").before(
+                            "<li data-combo-content-id='"
+                            + itemId
+                            + "'><a href='#'><span class='remove glyphicon glyphicon-remove aria-hidden='true''></span></a>"
+                            + itemName
+                            + " x "
+                            + itemQuantity
+                            + "g</li>"
+                            );
+                    $("#div-addItem").addClass("hidden");
+                });
+    });
+
+    $(document).on("change", "#selectCombination", function () {
+        $(document).off("change", "#selectCombination");
+        comboId = $("#selectCombination").val();
+        comboName = $("#selectCombination  option:selected").text();
+
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/listComboItemsForEdit.php',
+            data: {calories_combination_id: comboId}
+        })
+                .done(function (response) {
+                    console.log(response);
+                    $("#combo-name").html(comboName);
+                    $("#combo-items-list").html(response);
+                });
+        $("#divSelectCombination").hide();
+        $("#items").show();
+
+    });
+
+    $("#content").one("change", "#selectItem", function () {
+        $("#button-save-combo").show();
+        var itemName = $("#selectItem option:selected").text();
+        var itemId = $("#selectItem option:selected").val();
+    });
+
+    $("#edit-combo-div").on("click", ".remove", function () {
+        var id = $(this).parent().parent().data("combo-content-id");
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/deleteItemFromCombo.php',
+            data: {
+                comboId: id
+            }
+        })
+                .done(function (response) {
+                    // alert(response);
+                    $("#combo-items-list li[data-combo-content-id=" + id + "]").remove();
+                });
+    });
+
+    $("#content").off().on("click", "#button-save-combo", function () {
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/editCombo.php',
+            data: {
+                comboId: comboId,
+                comboArray: comboArray
+            }
+        }).done(function (response) {
+            comboArray = [];
+            comboId = "";
+            console.log("response=" + (response));
+        });
+    });
+
+</script>
+
+
+
+
+
+

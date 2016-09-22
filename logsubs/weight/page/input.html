@@ -1,0 +1,71 @@
+<h1 class="heading">Input Weight</h1>
+<div class="jumbotron col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">    
+    <div id="alertDiv">
+    </div>
+    <div class="col-md-10 col-md-offset-1">
+        <form id="form-input-weight" method="post" class="form-signin" action="">
+            <div class="container">
+                <div class="form-group">
+                    <label for="stones">stones:</label>
+                    <input type="number" class="form-control" name="stones" id="stones" placeholder="stones" autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="pounds">pounds:</label>
+                    <input type="number" class="form-control" name="pounds" id="pounds" placeholder="pounds"  >
+                </div>
+                <div class="form-group">
+                    <label for="date">input date of weight</label>
+                    <input type="date" class="form-control" name="date" id="date"  required >  
+                </div>
+                <input class="btn btn-lg btn-primary btn-block" type="submit" name="submit" value="Log it!">
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--Modal shows when user tries to save weight to date that already has entry-->
+<div id="dateAlreadyUsedModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">Warning!</h3>
+            </div>
+            <div class="modal-body">
+                <h4 class="">You already have an entry for this date.</h4>
+                <h4>If the current entry is wrong then please edit it.</h4>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var form = $("#form-input-weight");
+    $(form).submit(function (e) {
+        e.preventDefault();
+        var formData = $(form).serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/weight/logWeight.php',
+            data: formData
+        })
+                .done(function (response) {
+                    if (response === "ERROR_DAY_ALREADY_HAS_RECORD") {
+                        //will give option of editing input/current record. in mean time just alerting
+                        $("#dateAlreadyUsedModal").modal("show");
+                    } else {
+                        $("#content").load("logsubs/weight/page/main.html");
+                    }
+                });
+    });
+</script>
+
+
+
+
+
+

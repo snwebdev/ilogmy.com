@@ -1,0 +1,55 @@
+<link rel="stylesheet"  href="css/styles.css">
+<link rel="stylesheet"  href="logsubs/calories/css/style.css">
+
+
+<h1 class="heading">display Week cals</h1>
+<div class="jumbotron col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">    
+    <div id="display"></div>
+    <ul id="list"></ul>
+</div>
+<script>
+
+    $(document).ready(function () {
+        // alert("ready");
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/getIntakeCalsByCombo.php'
+        })
+                .done(function (response) {
+                    // alert("response=" + response);
+                    console.log("response=" + response);
+                    //$("#display").html(response);
+                    var intake = $.parseJSON(response);
+                    console.log("intake=" + JSON.stringify(intake));
+                    var html = "";
+//                    $("#list").html = "";
+//                    var currentDate = "";
+//                    var currentTime = "";
+//                    var currentComboName = "";
+//                    var currentItemName = "";
+//                    var comboTotal = 0;
+                    $.each(intake, function (index, list) {
+                        $.each(list, function (key, value) {
+                         html += "<li>"+key+": "+value+"</li>";
+
+                        });
+                    });
+                    $("#list").html(html);
+                });
+    });
+//    $(document).on("change", "#selectCombination", function () {
+//        comboId = $("#selectCombination").val();
+//        comboName = $("#selectCombination  option:selected").text();
+//        //alert(comboId); 
+//        $.ajax({
+//            type: 'POST',
+//            url: 'logsubs/calories/getWeekCals.php',
+//            data: {calories_combination_id: comboId}
+//        })
+//                .done(function (response) {
+//                    console.log(response);
+//            $("#combo-name").html(comboName);
+//            $("#combo-items-list").html(response);
+//                });
+//    });
+</script>

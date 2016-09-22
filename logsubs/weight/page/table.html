@@ -1,0 +1,111 @@
+<link rel="stylesheet"  href="logsubs/weight/css/style.css">
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <ul id="table" class="list-group"></ul>
+        </div>
+        <div class="col-lg-4"></div>
+    </div>
+</div>
+
+<div id="choose-edit-or-delete-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">Saved Log Entry</3>
+            </div>
+            <div class="modal-body">
+                <h4 class=""><span id="date"></span>
+                    <span id="weight-date" class="li-date"></span>
+                    <span id="weight-stones" class="li-stones"></span>
+                    <span class="abreviation-stones">st.</span>
+                    <span id="weight-pounds" class="li-pounds">1</span>
+                    <span class="abreviation-pounds">lb.</span>
+                </h4>
+                <div class="modal-footer">
+                    
+
+
+                        <button id="button-edit" type="button" class="btn btn-lg btn-primary">Edit entry</button>
+                        <button id="button-delete" type="button" class="btn btn-lg btn-danger">Delete entry</button>
+
+
+                 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    getWeightByDateAsListGroup();
+
+    function getWeightByDateAsListGroup() {
+        $.ajax({
+            url: "logsubs/weight/getWeightByDateAsListGroup.php",
+            context: document.body,
+            dataType: "text"
+        }).done(function (data) {
+            console.log("done");
+            console.log("data=" + data);
+            $("#table").html(data);
+        });
+    }
+
+
+    $(document).on('click', 'li', function () {
+        var date = $(this).closest("li").find(".li-date").text();
+        var YMDDateText = date.split("-").reverse().join("-");
+        var stones = $(this).closest("li").find(".li-stones").text();
+        var pounds = $(this).closest("li").find(".li-pounds").text();
+
+        $("#date").text(date);
+        $("#weight-stones").text(stones);
+        $("#weight-pounds").text(pounds);
+        $('#choose-edit-or-delete-modal').modal();
+
+    });
+
+    $("#button-delete").click(function () {
+        var date = $("#date").text();
+        var YMDDateText = date.split("-").reverse().join("-");
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/weight/deleteEntry.php',
+            data: {weightDate: YMDDateText}
+        }).done(function (response) {
+            getWeightByDateAsListGroup();
+            $('#choose-edit-or-delete-modal').modal('toggle');
+            getWeightByDateAsListGroup();
+        });
+    });
+
+    $("#button-edit").click(function () {
+        var date = $("#date").text();
+        var YMDDate = new Date(date.split("-").reverse().join("-"));
+        var YMDDateText = date.split("-").reverse().join("-");
+        var weightStones = $("#weight-stones").text();
+        var weightPounds = $("#weight-pounds").text();
+        $('#choose-edit-or-delete-modal').modal().hide();
+        $('.modal-backdrop').remove();
+        $("#content").load("logsubs/weight/page/editEntry.html", function () {
+            $("#weight-date").text(date);
+            $("#weight-stones").text(weightStones);
+            $("#weight-pounds").text(weightPounds);
+            $("#stones").attr("placeholder", weightStones);
+            $("#pounds").attr("placeholder", weightPounds);
+
+        });
+    });
+</script>
+
+
+
+
+

@@ -1,0 +1,15 @@
+#chart {
+/*  height: 400px;*/
+  width: 100%;    
+}
+
+.li-date {
+    padding-left: 20px;
+}
+
+.li-pounds {
+    padding-left: 5px;
+}
+.li-stones {
+      padding-left: 20px;
+}

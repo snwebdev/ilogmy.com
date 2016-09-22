@@ -1,0 +1,133 @@
+<link rel="stylesheet"  href="css/styles.css">
+<link rel="stylesheet"  href="logsubs/calories/css/style.css">
+
+<h1 class="heading">Calories per Day</h1>
+
+<div class="container" id="display">
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <ul id="list" class="list-group"></ul>
+        </div>
+        <div class="col-lg-4"></div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/getIntakeCalsByDay.php'
+        })
+                .done(function (response) {
+                    console.log("response=" + response);
+                    var intake = $.parseJSON(response);
+                    console.log("intake=" + JSON.stringify(intake));
+                    var html = "";
+
+                    $.each(intake, function (index, list) {
+
+                        html += "<li class='list-group-item clickable' data-date=" + list.date + ">"
+                                + day(list.date)
+                                + " "
+                                + date(list.date)
+                                + dateSuffix(list.date)
+                                + " "
+                                + month(list.date)
+                                + " "
+                                + year(list.date)
+                                + ", "
+                                + list.cals
+                                + " Cal.<div class='expand'></div></li>";
+                    });
+                    $("#list").html(html);
+                });
+    });
+    
+    $("#display").off("click");
+    $("#display").on("click", "li", function () {
+        var date = ($(this).data("date"));
+        var expand = $(this).find(".expand");
+        if (expand.html() === "") {
+            $.ajax({
+                type: 'POST',
+                url: 'logsubs/calories/getCalsForThisDay.php',
+                data: {date: date}
+            })
+                    .done(function (response) {
+                        console.log(response);
+                        var html = "";
+                        console.log("response=" + response);
+                        intake = $.parseJSON(response);
+
+                        $.each(intake, function (index, list) {
+                            html += "<li class='list-group-item clickable' data-time=" + list.time + ">"
+                                    // + list.time 
+                                    + time(list.time)
+                                    + " - "
+                                    + list.combo_name
+                                    + ", "
+                                    + list.cals
+                                    + " Cal.<div id='expand'></div></li>";
+                            expand.html(html);
+                        });
+                    });
+        } else {
+            expand.html("");
+        }
+    });
+
+    function day(date) {
+        var thisDate = new Date(date);
+        dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        var day = thisDate.getDay();
+        var date = thisDate.getDate();
+        return dayNames[day];
+    }
+
+    function date(date) {
+        var thisDate = new Date(date);
+        var date = thisDate.getDate();
+        return date;
+    }
+
+    function month(date) {
+        var thisDate = new Date(date);
+        monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var month = thisDate.getMonth();
+        return monthNames[month];
+    }
+
+    function year(date) {
+        var thisDate = new Date(date);
+        var year = thisDate.getFullYear();
+        return year;
+    }
+
+    function dateSuffix(date) {
+        var thisDate = new Date(date);
+        var date = thisDate.getDate();
+        var dateString = date.toString();
+        var lastDigit = +dateString.substr(dateString.length - 1);
+        if (lastDigit === 1)
+            return "st";
+        if (lastDigit === 2)
+            return "nd";
+        if (lastDigit === 3)
+            return "rd";
+        return "th";
+    }
+
+    function time(time) {
+        var hourString = time.substr(0, 2);
+        var hour = parseInt(hourString);
+        var minuteString = time.substr(3, 2);
+        if (hour < 12) {
+            return hourString + ":" + minuteString + " am";
+        } else {
+            var returnHourString = ("0" + (hourString - 12)).substr(0, 2);
+            return returnHourString + ":" + minuteString + " pm";
+        }
+    }
+</script>

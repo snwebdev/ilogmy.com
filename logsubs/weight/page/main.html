@@ -1,0 +1,22 @@
+<div class="container" data-logsub="weight">
+    <a href="#">
+        <div class="log-option" data-option="logWeight">Log your weight</div>
+    </a>
+    <a href="#">
+        <div class="log-option" data-option="graph">View weight as graph</div>
+    </a>
+    <a href="#" >
+        <div class="log-option" data-option="table">View weight as table</div>
+    </a>
+</div>
+
+<script>
+    $(".log-option").on("click", function(){
+        var option= $(this).attr("data-option");
+        var logsub = $(".container").attr("data-logsub");
+        //alert("logsub="+logsub);
+        var file = "logsubs/" +logsub +"/page/" + option +".html";
+         $("#content").load(file);
+    });
+    </script>
+

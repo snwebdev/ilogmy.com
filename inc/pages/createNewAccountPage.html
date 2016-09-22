@@ -1,0 +1,55 @@
+
+<h1 class="heading">Create New Account</h1>
+
+<div class="container">
+    <div class="jumbotron col-md-6 col-md-offset-3">         
+        <div class="col-md-10 col-md-offset-1">        
+            <form id="createNewAccount" method="POST" class="form-signin" action="createNewAccount.php" >
+                <div class="form-group">
+                    <label for="signupUserName">choose a user name</label>
+                    <input type="text" class="form-control" name="signupUserName" id="signupUserName" placeholder="User Name" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">choose a password</label>
+                    <input type="password" class="form-control" name="signupPassword" id="signupPassword" placeholder="Password" required >
+                </div>
+                <div class="form-group">
+                    <label for="retypePassword">retype password</label>
+                    <input type="password" class="form-control" name="retypePassword" id="retypePassword" placeholder="Password" required >
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">insert your email address </label>
+                    <input type="email" class="form-control" name="signupEmail" id="signupEmail" placeholder="Email">
+                </div>
+                <input id="createAccountButton" class="btn btn-lg btn-primary btn-block" type="submit" name="submit" value="Sign Up">
+            </form>           
+        </div>
+    </div>
+</div>
+
+<script>
+    var form = $("#createNewAccount");
+    $(form).submit(function (e) {
+        e.preventDefault();
+        if($("#signupPassword").val() !== $("#retypePassword").val()){
+            $("#signupPassword").val("");
+            $("#retypePassword").val("");
+            $("#signupPassword").focus();
+            alert("That's two different passwords. Sorry. Try again, please.");
+        } else {
+        //alert("submitting form");
+        var formData = $(form).serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: 'createNewAccount.php',
+            data: formData
+        }).done (function(response) {
+            //alert("done");
+            $("#content").load("inc/pages/mainChoice.php");
+        });
+    }
+   });
+   
+   
+</script>

@@ -1,0 +1,67 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.js"></script>
+<link rel="stylesheet"  href="logsubs/weight/css/style.css">
+<script type="text/javascript" src="../canvas/canvasjs.min.js"></script>
+
+<div id="chart">
+    <canvas id="chartContainer" ></canvas>
+</div>
+
+
+<script>
+    $.ajax({
+        url: "logsubs/weight/getWeight.php",
+        context: document.body,
+        dataType: "json"
+    })
+            .done(function (data) {
+                var dataPoints = [];
+                $.each(data, function (index) {
+                    var jsonData = {};
+                    var date = data[index]['x'];
+                    jsonData['x'] = date;
+                    jsonData['y'] = data[index]['y'];
+                    dataPoints.push(jsonData);
+                });
+
+                var ctx = document.getElementById("chartContainer");
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                       
+                        datasets: [{
+                                data: dataPoints,
+                                lineTension: 0, 
+                                fill: false,
+                            }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        
+                        title: {
+                            display: false,
+                            text: "weight"
+                        },
+                        legend: {
+                            display: false
+                        },
+                        scales: {
+                            xAxes: [{
+                                    type: 'time',
+                                    unit: 'week'
+                                }]
+                        }
+                    }
+                });
+            });
+</script>
+
+
+<script>
+    //set chart div height relative to window size
+    $("#chart").height($(window).height() - $(window).height() / 5);
+    $(window).resize(function () {
+        $("#chart").height($(window).height() - $(window).height() / 5);
+    });
+</script>
+

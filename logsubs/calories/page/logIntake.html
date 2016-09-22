@@ -1,0 +1,79 @@
+<h1 class="heading">Log Intake</h1>
+<div class="jumbotron col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">    
+    <div id="alertDiv">
+    </div>
+    <div class="col-md-10 col-md-offset-1">
+        <form id="form-log-intake" method="post" class="form-signin" action="">
+            <div class="container">
+                <div class="form-group">
+                    <label for="selectCombo">combo:</label>
+                    <select class="form-control" name="selectCombo" id="selectCombo"  autofocus></select>
+             
+              
+                <div class="form-group">
+                    <label for="date">input date of intake</label>
+                    <input type="date" class="form-control" name="date" id="date"  required >  
+                </div>
+                
+                <div class="form-group">
+                    <label for="time">input time of intake</label>
+                    <input type="time" class="form-control" name="time" id="time">  
+                </div>
+                <input class="btn btn-lg btn-primary btn-block" type="submit" name="submit" value="Log it!">
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+<script>
+   $(document).ready(function () {
+        // alert("ready");
+        $(document).ready(function () {
+            var now = new Date();
+            var hours = now.getHours();
+           if (hours < 10) hours = "0" + hours;
+            var minutes = now.getMinutes();
+            if (minutes < 10) minutes = "0" + minutes;
+            var seconds = "00";
+            var timeString = hours + ":" + minutes + ":" + seconds;
+            document.getElementById("date").valueAsDate = new Date();
+            $("#time").val(timeString);
+            
+        });
+        
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/getCombinationsForSelect.php'
+        })
+                .done(function (response) {
+                    console.log("response=" + response);
+                    $("#selectCombo").html(response);
+                });
+    });
+    
+    $("#form-log-intake").submit(function (e) {
+        e.preventDefault();
+         var formData = $("#form-log-intake").serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/logIntake.php',
+            data: formData
+        })
+                .done(function(response){
+                    
+                    console.log(response);
+            $("#content").load("logsubs/calories/page/main.html");
+        });
+        
+    });
+</script>
+
+
+
+
+
+

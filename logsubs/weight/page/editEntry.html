@@ -1,0 +1,58 @@
+<link rel="stylesheet"  href="logsubs/weight/css/style.css">
+
+<h1 class="heading">Edit Weight Entry</h1>
+<div class="jumbotron col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">    
+    <div id="alertDiv">
+    </div>
+    <div class="col-md-10 col-md-offset-1">
+        <div id="display"></div>
+        <form id="form-input-weight" method="post" class="form-signin" action="">
+            <input type="hidden" name="originalDateEntry" id="originalDateEntry" value="mince">
+            <div class="container">
+                <label>Entry Currently Saved As:</label>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span id="weight-date" class="li-date"></span>
+                        <span id="weight-stones" class="li-stones"></span>
+                        <span class="abreviation-stones">st.</span>
+                        <span id="weight-pounds" class="li-pounds">1</span>
+                        <span class="abreviation-pounds">lb.</span>
+                    </li>
+                </ul>
+                <div class="form-group">
+                    <label for="stones">update stones:</label>
+                    <input type="number" class="form-control" name="stones" id="stones" placeholder="stones" autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="pounds">update pounds:</label>
+                    <input type="number" class="form-control" name="pounds" id="pounds" placeholder="pounds"  >
+                </div>
+                <input class="btn btn-lg btn-primary btn-block" type="submit" name="submit" value="Log it!">
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    var form = $("#form-input-weight");
+    $(form).submit(function (e) {
+        e.preventDefault();
+        var formData = $(form).serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/weight/updateEntry.php',
+            data: formData
+        })
+                .done(function (response) {
+                    $("#content").load("logsubs/weight/page/table.html");
+                });
+    });
+</script>
+
+
+
+
+
+

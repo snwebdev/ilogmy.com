@@ -1,0 +1,94 @@
+<link rel="stylesheet"  href="css/styles.css">
+
+<h1 class="heading">Combine List Item</h1>
+<div class="jumbotron col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">    
+   
+    <div class="col-md-10 col-md-offset-1">
+         <div id="combinationDisplay">
+        <h3 id="combinationDisplayName"></h3>
+        <ul id="combinationDisplayUl"></ul>
+    </div>
+        <div id="display"></div>
+        <form id="combine-items" method="post" class="form-signin" action="">
+
+
+            <div class="form-group" id="combinationNameInoutDiv">
+                <label for="name">combination name:</label>
+                <input type="text" class="form-control" name="combinationName" id="combinationName" placeholder="e.g. Roll and Bacon" autofocus>
+            </div>
+            <div class="form-group">
+                <label for="sellectItem">Select item:</label>
+                <select class="form-control" id="selectItem"></select>
+            </div>
+            <div class="form-group">
+                <label for="quantity">quantity:</label>
+                <input class="form-control" type="number" name="quantity" id="quantity" value="1">
+            </div>
+            <div class="-group">
+                <button id="button-add-item-to-combination" type="button" class="btn btn-primary form-control">Add item to combination</button>
+                <button id="all-done" type="button" class="btn btn-primary form-control">All Done</button>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+
+<script>
+var combinationArray = [];
+    $(document).ready(function () {
+        // alert("ready");
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/getItemsForSelect.php'
+        })
+                .done(function (response) {
+                    // alert("response=" + response);
+                    console.log("response=" + response);
+                    $("#selectItem").html(response);
+                });
+    });
+
+    $(document).on("click", "#button-add-item-to-combination", function () {
+        $("#combinationNameInoutDiv").hide();
+        var combinationName = $("#combinationName").val();
+ 
+        
+        var itemQuantity = $("#quantity").val();
+        var itemId = $("#selectItem").val();
+        
+        var idAndQuantity = [itemId, itemQuantity];
+        combinationArray.push(idAndQuantity);
+    
+        var itemName = $("#selectItem option:selected").html();
+        $("#combinationDisplayName").text(combinationName);
+        $("#combinationDisplayUl").append("<li>" + itemQuantity + " x " + itemName + "</ul>");
+
+    });
+    
+      $(document).on("click", "#all-done", function () {
+ alert(combinationArray);
+
+    });
+//    var form = $("#form-input-item");
+//    $(form).submit(function (e) {
+//        e.preventDefault();
+//        var formData = $(form).serialize();
+//
+//        $.ajax({
+//            type: 'POST',
+//            url: 'logsubs/calories/addItem.php',
+//            data: formData
+//        })
+//                .done(function (response) {
+//                   // $("#content").load("logsubs/weight/page/table.html");
+//           console.log("response="+response);
+//                });
+//    });
+</script>
+
+
+
+
+
+

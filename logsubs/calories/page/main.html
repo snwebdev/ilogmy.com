@@ -1,0 +1,41 @@
+<div class="container" data-logsub="calories">
+    <a href="#">
+        <div class="log-option" data-option="logIntake">Log your intake</div>
+    </a>
+    <a href="#">
+        <div class="log-option" data-option="createCombination">Create New Combo</div>
+    </a>
+     <a href="#">
+        <div class="log-option" data-option="editCombination">Edit Combo</div>
+    </a>
+    <a href="#">
+        <div class="log-option" data-option="addListItem">Add to Calorie List</div>
+    </a>
+
+     <a href="#" >
+        <div class="log-option" data-option="displayCombo">Display Combo</div>
+    </a>
+    <a href="#" >
+        <div class="log-option" data-option="displayComboCals">Display Combo Calories</div>
+    </a>
+    
+     <a href="#" >
+        <div class="log-option" data-option="intakeCalsByDay">Display Intake</div>
+    </a>
+    
+    <a href="#" >
+        <div class="log-option" data-option="help">Help</div>
+    </a>
+
+</div>
+
+<script>
+    $(".log-option").on("click", function(){
+        var option= $(this).attr("data-option");
+        var logsub = $(".container").attr("data-logsub");
+        //alert("logsub="+logsub);
+        var file = "logsubs/" +logsub +"/page/" + option +".html";
+         $("#content").load(file);
+    });
+    </script>
+

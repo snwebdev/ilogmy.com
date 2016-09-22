@@ -1,0 +1,46 @@
+<link rel="stylesheet"  href="css/styles.css">
+
+<h1 class="heading">Create New Combination</h1>
+<div class="jumbotron col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">    
+
+
+    <div id="display"></div>
+    <form id="combine-items" method="post" class="form-signin" action="">
+
+
+        <div class="form-group" id="combination">
+            <label for="name">combination name:</label>
+            <input type="text" class="form-control" name="combinationName" id="combinationName" placeholder="e.g. Roll and Bacon" autofocus>
+        </div>
+
+        <div class="-group">
+
+            <input class="btn btn-primary form-control" type="submit" value="submit">
+        </div>
+    </form>
+</div>
+
+
+<script>
+    var form = $("#combine-items");
+
+    $(form).submit(function (e) {
+        e.preventDefault();
+        var formData = $(form).serialize();
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/createNewCombination.php',
+            data: formData
+        })
+                .done(function (response) {
+                    console.log(response);
+                      $("#content").load("logsubs/calories/page/main.html");
+                });
+    });
+</script>
+
+
+
+
+
+

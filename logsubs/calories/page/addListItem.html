@@ -1,0 +1,47 @@
+<link rel="stylesheet"  href="logsubs/weight/css/style.css">
+
+<h1 class="heading">Add List Item</h1>
+<div class="jumbotron col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">    
+    <div id="alertDiv">
+    </div>
+    <div class="col-md-10 col-md-offset-1">
+        <div id="display"></div>
+        <form id="form-input-item" method="post" class="form-signin" action="">
+            <div class="container">               
+                <div class="form-group">
+                    <label for="name">item name:</label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="input name of item" autofocus>
+                </div>
+                 <div class="form-group">
+                    <label for="portion-description">calories per 100g / 100ml:</label>
+                    <input type="text" class="form-control" name="calories-per-100g/100ml" id="calories-per-100g/100ml" placeholder="127, 99, etc."  >
+                </div>           
+                <input class="btn btn-lg btn-primary btn-block" type="submit" name="submit" value="Log it">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var form = $("#form-input-item");
+    $(form).submit(function (e) {
+        e.preventDefault();
+        var formData = $(form).serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: 'logsubs/calories/addItem.php',
+            data: formData
+        })
+                .done(function (response) {
+                    $("#content").load("logsubs/calories/page/main.html");
+           //console.log("response="+response);
+                });
+    });
+</script>
+
+
+
+
+
+
