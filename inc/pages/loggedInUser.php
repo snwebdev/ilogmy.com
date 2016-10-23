@@ -34,10 +34,5 @@ $_SESSION['logName'] = "";
         </a>
     </div>
 
-
-
-
-
-
 </body>
 </html>

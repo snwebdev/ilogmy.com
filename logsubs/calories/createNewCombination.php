@@ -3,7 +3,7 @@
 
 require_once("../../inc/connection.php");
 
-$combinationName = $_POST['combinationName'];
+$combinationName = mysqli_real_escape_string($dbConnection, $_POST['combinationName']);
 $user_id = $_SESSION['id'];
 
 $query = "INSERT INTO `calories_combination`(`name`, `user_id`) VALUES ('$combinationName', $user_id)";

@@ -3,7 +3,7 @@
 
 require_once("../../inc/connection.php");
 
-$name = $_POST['name'];
+$name = mysqli_real_escape_string($dbConnection, $_POST['name']);
 $calories = $_POST['calories-per-100g/100ml'];
 $user_id = $_SESSION['id'];
 
